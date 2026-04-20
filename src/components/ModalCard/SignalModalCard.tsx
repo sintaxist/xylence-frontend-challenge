@@ -48,7 +48,7 @@ export function SignalCard({ signal }: { signal: ConvictionSignal }) {
         />
       </div>
 
-      <p className="text-sm text-textMain/80 leading-relaxed border-l-2 border-cardBorder pl-3 italic">
+      <p className="text-sm text-textMain leading-relaxed border-l-2 border-cardBorder pl-3 italic">
         {signal.label}
       </p>
     </div>

@@ -1,59 +1,50 @@
-// src/App.tsx
-import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
-import { fetchStartups } from "./api/mock"; 
-import { StartupCard } from "./components/StartupCard";
-import { StartupCardSkeleton } from "./components/StartupCardSkeleton";
-import { Sun, Moon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Header } from "@/components/Shared/Header";
+import { Dashboard } from "@/components/Dashboard";
+import { useEffect, useState, useCallback } from "react";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 5,
+    },
+  },
+});
 
-function Dashboard() {
-  const [isDark, setIsDark] = useState(false);
-  const { data: startups, isLoading } = useQuery({
-    queryKey: ["startups"],
-    queryFn: () => fetchStartups(),
+export default function App() {
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme") === "dark";
+    }
+    return false;
   });
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDark);
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem("theme", "light");
+    }
   }, [isDark]);
 
-  return (
-    <main className="min-h-screen px-6 py-10 max-w-[1400px] mx-auto">
-      <header className="mb-12 flex justify-between items-center">
-        <div>
-          <h1 className="text-4xl font-black text-textMain tracking-tighter">Xylence</h1>
-          <p className="text-textSecondary text-xs mt-1 font-black uppercase tracking-[0.2em]">
-            Predictive Feed
-          </p>
-        </div>
-        
-        <button 
-          onClick={() => setIsDark(!isDark)}
-          className="w-12 h-12 flex items-center justify-center rounded-full bg-cardBg border border-cardBorder text-textMain hover:bg-textMain hover:text-cardBg transition-all duration-300 shadow-sm"
-        >
-          {isDark ? <Sun size={20} /> : <Moon size={20} />}
-        </button>
-      </header>
+  const toggleTheme = useCallback(() => {
+    setIsDark((prev) => !prev);
+  }, []);
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 relative z-10">
-        {isLoading
-          ? Array.from({ length: 8 }).map((_, i) => (
-              <StartupCardSkeleton key={i} index={i} />
-            ))
-          : startups?.map((startup) => (
-              <StartupCard key={startup.id} startup={startup} />
-            ))}
-      </section>
-    </main>
-  );
-}
-
-export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Dashboard />
+      <main className="min-h-screen bg-appBg transition-colors duration-300 w-full overflow-x-hidden">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6 sm:py-10 w-full flex flex-col items-center">
+          
+          <Header isDark={isDark} toggleTheme={toggleTheme} />
+          
+          <Dashboard />
+
+        </div>
+      </main>
     </QueryClientProvider>
   );
 }

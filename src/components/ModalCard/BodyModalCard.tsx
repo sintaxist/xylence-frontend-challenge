@@ -1,14 +1,16 @@
 import { calculateSegmentFill, getScoreColorClass, SEGMENTS_SCORE_BAR, trendConfigIcons } from '@/utils/visuals';
-import { Bookmark, Share2 } from 'lucide-react';
-import { CircleFlag } from 'react-circle-flags'
+import { Bookmark, Share2, EyeOff } from 'lucide-react';
+import { CircleFlag } from 'react-circle-flags';
 import { SignalCard } from './SignalModalCard';
+import { EmptyState } from '@/components/Shared/EmptyState';
 import { Startup } from '@/types';
 
 export default function BodyModalCard({ details }: { details: Startup }) {
 
-    const { trend } = details
-
+    const { trend } = details;
     const { color, Icon } = trendConfigIcons[trend];
+    
+    const hasSignals = details.signals && details.signals.length > 0;
 
     return (
         <>
@@ -42,17 +44,28 @@ export default function BodyModalCard({ details }: { details: Startup }) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-                {details.signals.map((signal, index) => (
-                    <SignalCard key={index} signal={signal} />
-                ))}
-            </div>
+            {hasSignals ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                    {details.signals.map((signal, index) => (
+                        <SignalCard key={index} signal={signal} />
+                    ))}
+                </div>
+            ) : (
+                <div className="mb-8 bg-hoverBg border-2 border-dashed border-cardBorder rounded-[32px] overflow-hidden">
+                    <EmptyState 
+                        icon={EyeOff}
+                        title="Sin datos suficientes"
+                        description="Esta compañía se encuentra en etapa temprana o bajo perfil. Aún no hay señales públicas suficientes para generar un desglose detallado."
+                        compact={true}
+                    />
+                </div>
+            )}
 
             <div className="flex justify-center gap-4 pt-6 border-t border-cardBorder">
-                <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-textMain/5 text-xs font-black uppercase hover:bg-textMain hover:text-cardBg transition-all">
+                <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-hoverBg text-xs font-black uppercase hover:bg-textMain hover:text-cardBg transition-all">
                     <Share2 size={16} /> Compartir
                 </button>
-                <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-textMain/5 text-xs font-black uppercase hover:bg-textMain hover:text-cardBg transition-all">
+                <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-hoverBg text-xs font-black uppercase hover:bg-textMain hover:text-cardBg transition-all">
                     <Bookmark size={16} /> Guardar
                 </button>
             </div>

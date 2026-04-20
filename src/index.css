@@ -1,3 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg-app: #E6E6E6;
+    --color-bg-card: #F1F1F1;
+    --color-accent: #CDF258;
+    
+    --color-text-main: #1A1A1A;
+    --color-text-secondary: #666666;
+    --color-border: rgba(0, 0, 0, 0.1);
+
+    --color-trend-up: #63c47e;
+    --color-trend-down: #FF4D4F;
+    --color-trend-neutral: #A8A39D;
+
+    --radius-card: 32px;
+  }
+
+  .dark {
+    --color-bg-app: #0A0A0A;
+    --color-bg-card: #141414;
+    --color-accent: #CDF258;
+    
+    --color-text-main: #F5F5F5;
+    --color-text-secondary: #A3A3A3;
+    --color-border: rgba(255, 255, 255, 0.12);
+
+    --color-trend-up: #86EFAC;
+    --color-trend-down: #FF7875;
+    --color-trend-neutral: #D4D4D8;
+  }
+
+  body {
+    @apply bg-appBg text-textMain antialiased;
+  }
+}
+
+@layer utilities {
+  @keyframes skeleton-cycle {
+    0% { opacity: .2; transform: translateY(20px); }
+    15% { opacity: 1; transform: translateY(0); }
+    85% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(0); }
+  }
+
+  .animate-skeleton-cycle {
+    animation: skeleton-cycle 2s ease-in-out infinite; 
+    animation-fill-mode: both; 
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -7,38 +61,5 @@
 html,
 body,
 #root {
-  height: 100%;
   margin: 0;
-}
-
-body {
-  font-family:
-    "Inter",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #0f172a;
-  background: #f8fafc;
-}
-
-.app-shell {
-  min-height: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px 24px;
-}
-
-.app-header h1 {
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  margin: 0 0 32px;
-}
-
-.app-content {
-  min-height: 200px;
 }

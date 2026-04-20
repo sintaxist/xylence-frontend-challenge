@@ -9,7 +9,7 @@ export default function BodyStartupCard({ startup }: { startup: Startup }) {
     return (
     <>
         <div className="flex items-center gap-3 sm:gap-4">
-            <h3 className="text-2xl sm:text-3xl font-black text-textMain truncate">{name}</h3>
+            <h3 className="text-2xl sm:text-3xl font-black text-textMain">{name}</h3>
             <CircleFlag
                 countryCode={country.toLowerCase()}
                 className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-cardBorder shrink-0"

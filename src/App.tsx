@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Header } from "@/components/Shared/Header";
-import { Dashboard } from "@/components/Dashboard";
 import { useEffect, useState, useCallback } from "react";
+import Dashboard from "@/components/Dashboard";
 
 const queryClient = new QueryClient({
   defaultOptions: {

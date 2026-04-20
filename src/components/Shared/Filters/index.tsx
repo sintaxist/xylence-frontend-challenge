@@ -11,7 +11,11 @@ interface FiltersProps {
   totalResults: number;
 }
 
-export function Filters({ filters, onFilterChange, totalResults }: FiltersProps) {
+export function Filters({
+  filters,
+  onFilterChange,
+  totalResults,
+}: FiltersProps) {
   const [inputValue, setInputValue] = useState(filters.search || "");
 
   useEffect(() => {
@@ -28,27 +32,33 @@ export function Filters({ filters, onFilterChange, totalResults }: FiltersProps)
   const toggleArrayFilter = (key: keyof StartupFilters, value: string) => {
     const currentArray = (filters[key] as any[]) || [];
     const newArray = currentArray.includes(value)
-      ? currentArray.filter(v => v !== value)
+      ? currentArray.filter((v) => v !== value)
       : [...currentArray, value];
     onFilterChange({ [key]: newArray });
   };
 
   const activeFilters: { key: keyof StartupFilters; value: string }[] = [];
-  if (filters.sectors) filters.sectors.forEach(v => activeFilters.push({ key: "sectors", value: v }));
-  if (filters.stages) filters.stages.forEach(v => activeFilters.push({ key: "stages", value: v }));
-  if (filters.countries) filters.countries.forEach(v => activeFilters.push({ key: "countries", value: v }));
-
+  if (filters.sectors)
+    filters.sectors.forEach((v) =>
+      activeFilters.push({ key: "sectors", value: v }),
+    );
+  if (filters.stages)
+    filters.stages.forEach((v) =>
+      activeFilters.push({ key: "stages", value: v }),
+    );
+  if (filters.countries)
+    filters.countries.forEach((v) =>
+      activeFilters.push({ key: "countries", value: v }),
+    );
 
   const handleClearAll = () => {
-    onFilterChange({ sectors: [], stages: [], countries: [], search: "" }); 
+    onFilterChange({ sectors: [], stages: [], countries: [], search: "" });
     setInputValue("");
   };
 
   return (
     <div className="space-y-4 sm:space-y-5 mb-8 border-b border-cardBorder pb-6 w-full">
-      
       <div className="flex flex-col md:flex-row gap-3 md:items-center z-20 w-full">
-        
         <div className="relative w-full md:flex-grow">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-textSecondary w-4 h-4" />
           <input
@@ -59,8 +69,11 @@ export function Filters({ filters, onFilterChange, totalResults }: FiltersProps)
             className="w-full bg-cardBg border border-cardBorder rounded-xl py-2 sm:py-3 pl-10 pr-4 text-sm text-textMain font-medium focus:outline-none focus:border-accent transition-all"
           />
           {inputValue && (
-            <button 
-              onClick={() => { setInputValue(""); onFilterChange({ search: "" }); }} 
+            <button
+              onClick={() => {
+                setInputValue("");
+                onFilterChange({ search: "" });
+              }}
               className="absolute right-4 top-1/2 -translate-y-1/2 text-textSecondary hover:text-textMain"
             >
               <X size={16} />
@@ -69,23 +82,32 @@ export function Filters({ filters, onFilterChange, totalResults }: FiltersProps)
         </div>
 
         <div className="flex flex-wrap gap-2 sm:gap-3 shrink-0">
-          <FilterDropdown 
-            label="Categoría" 
-            options={["FinTech", "B2B SaaS", "HealthTech", "AgriTech", "ClimaTech", "LogiTech", "PropTech", "EdTech"]} 
+          <FilterDropdown
+            label="Categoría"
+            options={[
+              "FinTech",
+              "B2B SaaS",
+              "HealthTech",
+              "AgriTech",
+              "ClimaTech",
+              "LogiTech",
+              "PropTech",
+              "EdTech",
+            ]}
             selected={filters.sectors || []}
             onSelect={(val) => toggleArrayFilter("sectors", val)}
             dropdownPositionClass="left-0"
           />
-          <FilterDropdown 
-            label="Etapa" 
-            options={["Pre-seed", "Seed", "Series A", "Series B+"]} 
+          <FilterDropdown
+            label="Etapa"
+            options={["Pre-seed", "Seed", "Series A", "Series B+"]}
             selected={filters.stages || []}
             onSelect={(val) => toggleArrayFilter("stages", val)}
             dropdownPositionClass="right-0"
           />
-          <FilterDropdown 
-            label="País" 
-            options={["MX", "AR", "CO", "CL", "BR", "PE"]} 
+          <FilterDropdown
+            label="País"
+            options={["MX", "AR", "CO", "CL", "BR", "PE"]}
             selected={filters.countries || []}
             onSelect={(val) => toggleArrayFilter("countries", val)}
             dropdownPositionClass="left-0 md:right-0 md:left-auto"
@@ -93,10 +115,10 @@ export function Filters({ filters, onFilterChange, totalResults }: FiltersProps)
         </div>
       </div>
 
-      <ActiveFilters 
-        activeFilters={activeFilters} 
-        onRemove={toggleArrayFilter} 
-        onClearAll={handleClearAll} 
+      <ActiveFilters
+        activeFilters={activeFilters}
+        onRemove={toggleArrayFilter}
+        onClearAll={handleClearAll}
       />
 
       <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center pt-2 sm:pt-3 mt-2 gap-4 sm:gap-0 w-full">
@@ -104,15 +126,10 @@ export function Filters({ filters, onFilterChange, totalResults }: FiltersProps)
           {totalResults.toLocaleString()} resultados
         </span>
 
-        <SortDropdown 
-          sortBy={filters.sortBy} 
-          sortOrder={filters.sortOrder} 
-          onSortChange={(sortBy, sortOrder) => 
-            onFilterChange({ 
-              sortBy: sortBy as StartupFilters["sortBy"], 
-              sortOrder 
-            })
-          } 
+        <SortDropdown
+          sortBy={filters.sortBy}
+          sortOrder={filters.sortOrder}
+          onSortChange={(sortBy, sortOrder) => onFilterChange({ sortBy, sortOrder })}
         />
       </div>
     </div>

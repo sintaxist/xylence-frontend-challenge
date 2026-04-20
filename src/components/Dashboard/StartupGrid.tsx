@@ -11,11 +11,13 @@ interface StartupGridProps {
 }
 
 export function StartupGrid({ startups, isLoading, onSelect }: StartupGridProps) {
+  const gridClasses = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 relative z-10 w-full";
+
   if (isLoading) {
     return (
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 relative z-10 w-full">
+      <section className={gridClasses}>
         {Array.from({ length: 8 }).map((_, i) => (
-          <StartupCardSkeleton key={i} index={i} />
+          <StartupCardSkeleton key={`skeleton-${i}`} index={i} />
         ))}
       </section>
     );
@@ -27,7 +29,7 @@ export function StartupGrid({ startups, isLoading, onSelect }: StartupGridProps)
         <EmptyState 
           icon={SearchX}
           title="Sin resultados" 
-          description="No encontramos ninguna startup que coincida con tus filtros. Intenta ajustar los parámetros de búsqueda o limpiar las opciones seleccionadas."
+          description="No encontramos ninguna startup que coincida con tus filtros."
         />
       </div>
     );
@@ -36,11 +38,10 @@ export function StartupGrid({ startups, isLoading, onSelect }: StartupGridProps)
   const gridKey = startups.map(s => s.id).join('-');
 
   return (
-    <div className="w-full">
-
+    <div className="w-full min-h-[600px]">
       <section 
         key={gridKey}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 relative z-10 w-full"
+        className={gridClasses}
       >
         {startups.map((startup, i) => (
           <div 
@@ -54,8 +55,8 @@ export function StartupGrid({ startups, isLoading, onSelect }: StartupGridProps)
       </section>
 
       <div className="w-full text-center pt-20 pb-10">
-        <p className="text-sm font-medium text-textSecondary">
-          No hay más resultados disponibles :(
+        <p className="text-sm font-medium text-textSecondary italic">
+          No hay más resultados disponibles
         </p>
       </div>
     </div>

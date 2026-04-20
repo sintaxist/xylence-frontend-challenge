@@ -7,7 +7,7 @@
     --color-bg-app: #E6E6E6;
     --color-bg-card: #F1F1F1;
     --color-accent: #CDF258;
-    
+
     --color-text-main: #1A1A1A;
     --color-text-secondary: #666666;
     --color-border: rgba(0, 0, 0, 0.1);
@@ -23,7 +23,7 @@
     --color-bg-app: #0A0A0A;
     --color-bg-card: #141414;
     --color-accent: #CDF258;
-    
+
     --color-text-main: #F5F5F5;
     --color-text-secondary: #A3A3A3;
     --color-border: rgba(255, 255, 255, 0.12);
@@ -40,15 +40,79 @@
 
 @layer utilities {
   @keyframes skeleton-cycle {
-    0% { opacity: .2; transform: translateY(20px); }
-    15% { opacity: 1; transform: translateY(0); }
-    85% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(0); }
+    0% {
+      opacity: .2;
+      transform: translateY(20px);
+    }
+
+    15% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    85% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateY(0);
+    }
   }
 
   .animate-skeleton-cycle {
-    animation: skeleton-cycle 2s ease-in-out infinite; 
-    animation-fill-mode: both; 
+    animation: skeleton-cycle 2s ease-in-out infinite;
+    animation-fill-mode: both;
+  }
+
+  @keyframes card-entrance {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-card-entrance {
+    animation: card-entrance 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-fill-mode: both;
+  }
+
+  @keyframes modal-enter {
+    0% {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes modal-exit {
+    0% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+  }
+
+  .animate-modal-enter {
+    animation: modal-enter 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  .animate-modal-exit {
+    animation: modal-exit 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
 }
 

@@ -329,7 +329,7 @@ export class ApiError extends Error {
   }
 }
 
-const delay = (min = 4500, max = 6000) =>
+const delay = (min = 500, max = 1000) =>
   new Promise<void>((resolve) =>
     setTimeout(resolve, Math.floor(Math.random() * (max - min + 1)) + min),
   );

@@ -95,21 +95,21 @@ export function Filters({
               "EdTech",
             ]}
             selected={filters.sectors || []}
-            onSelect={(val) => toggleArrayFilter("sectors", val)}
+            onChange={(newArray) => onFilterChange({ sectors: newArray as any })}
             dropdownPositionClass="left-0"
           />
           <FilterDropdown
             label="Etapa"
             options={["Pre-seed", "Seed", "Series A", "Series B+"]}
             selected={filters.stages || []}
-            onSelect={(val) => toggleArrayFilter("stages", val)}
+            onChange={(newArray) => onFilterChange({ stages: newArray as any })}
             dropdownPositionClass="right-0"
           />
           <FilterDropdown
             label="País"
             options={["MX", "AR", "CO", "CL", "BR", "PE"]}
             selected={filters.countries || []}
-            onSelect={(val) => toggleArrayFilter("countries", val)}
+            onChange={(newArray) => onFilterChange({ countries: newArray as any })}
             dropdownPositionClass="left-0 md:right-0 md:left-auto"
           />
         </div>

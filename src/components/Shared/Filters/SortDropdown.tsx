@@ -59,13 +59,19 @@ export function SortDropdown({
             className="fixed inset-0 z-20"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute top-full right-0 mt-2 w-48 bg-cardBg border border-cardBorder rounded-xl shadow-xl z-30 py-2 flex flex-col animate-in fade-in zoom-in-95 duration-200">
+          <div className="absolute top-full right-0 mt-2 w-48 bg-cardBg border border-cardBorder rounded-xl shadow-xl z-30 py-2 flex flex-col animate-in fade-in zoom-in-95 duration-200 
+            max-h-[160px] overflow-y-auto overflow-x-hidden
+            [&::-webkit-scrollbar]:w-1.5
+            [&::-webkit-scrollbar-track]:bg-transparent
+            [&::-webkit-scrollbar-thumb]:bg-cardBorder
+            [&::-webkit-scrollbar-thumb]:rounded-full
+            hover:[&::-webkit-scrollbar-thumb]:bg-textSecondary">
             <button
               onClick={() => {
                 onSortChange(undefined as any, undefined as any);
                 setIsOpen(false);
               }}
-              className={`text-left px-4 py-2.5 text-sm font-medium transition-colors ${
+              className={`text-left px-4 py-2.5 text-sm font-medium transition-colors shrink-0 ${
                 isDefault
                   ? "text-textMain bg-selectedBg"
                   : "text-textSecondary hover:bg-hoverBg"
@@ -85,7 +91,7 @@ export function SortDropdown({
                   }
                   setIsOpen(false);
                 }}
-                className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium transition-colors ${
+                className={`flex items-center justify-between px-4 py-2.5 text-sm font-medium transition-colors shrink-0 ${
                   sortBy === opt.id
                     ? "bg-selectedBg text-textMain"
                     : "text-textSecondary hover:bg-hoverBg"

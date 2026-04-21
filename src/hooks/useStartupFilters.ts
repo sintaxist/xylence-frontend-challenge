@@ -25,32 +25,32 @@ export function useStartupFilters() {
   });
 
   const updateFilters = useCallback((newFilters: Partial<StartupFilters>) => {
-    setFilters((prev) => {
-      const updated: StartupFilters = {
-        ...prev,
-        ...newFilters,
-      };
-      
-      const params = new URLSearchParams();
-      
-      if (updated.search) params.set('search', updated.search);
-      
-      (updated.sectors || []).forEach(s => params.append('sectors', s));
-      (updated.stages || []).forEach(s => params.append('stages', s));
-      (updated.countries || []).forEach(c => params.append('countries', c));
 
-      if (updated.sortBy) {
-        params.set('sortBy', updated.sortBy);
-      }
-      
-      if (updated.sortOrder) {
-        params.set('sortOrder', updated.sortOrder);
-      }
-      
-      setSearchParams(params);
-      return updated;
-    });
-  }, [setSearchParams]);
+    const updated: StartupFilters = {
+      ...filters,
+      ...newFilters,
+    };
+    
+    setFilters(updated);
+    
+    const params = new URLSearchParams();
+    
+    if (updated.search) params.set('search', updated.search);
+    
+    (updated.sectors || []).forEach(s => params.append('sectors', s));
+    (updated.stages || []).forEach(s => params.append('stages', s));
+    (updated.countries || []).forEach(c => params.append('countries', c));
+
+    if (updated.sortBy) {
+      params.set('sortBy', updated.sortBy);
+    }
+    
+    if (updated.sortOrder) {
+      params.set('sortOrder', updated.sortOrder);
+    }
+    
+    setSearchParams(params);
+  }, [filters, setSearchParams]);
 
   return {
     filters,

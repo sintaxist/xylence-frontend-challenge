@@ -1,162 +1,53 @@
-# Xylence — Senior Frontend UI/UX Challenge
+# Notas — Prueba Técnica Xylence (Senior Frontend UI/UX)
 
-> Prueba técnica take-home para el rol de **Senior UI/UX Frontend Engineer**.
-> Tiempo estimado: **4–6 horas**. Plazo de entrega: **5 Días** desde que recibiste este repo.
+Hola equipo de Xylence, en especial a Antonio.
 
----
+Gracias por la oportunidad de realizar esta prueba técnica. Aunque el scope inicial era manejable, decidí dedicar tiempo adicional durante el fin de semana para pulir detalles. Prefiero no entregar componentes o features que no me convencen completamente, priorizando siempre cuidar la calidad final de la entrega.
 
-## 1. Contexto del producto
-
-**Xylence** es una plataforma de *inteligencia predictiva para venture capital en LATAM*. Ingerimos señales públicas y privadas sobre startups (contratación, tracción, menciones, fundadores, métricas de producto) y las sintetizamos en un **conviction score** — un indicador entre 0 y 100 que resume la probabilidad de que una startup se convierta en un outlier.
-
-Nuestros usuarios son **analistas de VC** que pasan de 4 a 6 horas diarias dentro del dashboard revisando deals, comparando señales y decidiendo a quién contactar esta semana. Lo que más les importa:
-
-- **Velocidad de escaneo.** Necesitan descartar 50 startups en 20 minutos y quedarse con 5 que merezcan una llamada.
-- **Confianza en la señal.** No basta con mostrar un número; necesitan entender *por qué* el score es alto o bajo.
-- **Bajo ruido visual.** El dashboard es su herramienta de trabajo, no un showcase.
-
-Con eso en mente, construye algo que un analista usaría con gusto todos los días.
+A continuación, detallo mi proceso, decisiones y observaciones sobre el proyecto:
 
 ---
 
-## 2. El ejercicio
+## 1. Diseño y Experiencia de Usuario (UX)
 
-Construye un **Startup Intelligence Feed** — una vista de lista o grid que muestre startups provenientes del mock API incluido en [src/api/mock.ts](src/api/mock.ts), con filtros y ordenamiento.
+Para el diseño, realicé un benchmark rápido de productos en el ámbito de inversión, trading y banca (principalmente **GBM** y **Revolut**), ya que son excelentes referentes en claridad y manejo de información densa. 
 
-El `App.tsx` actual es solo un shell vacío con el título. Todo lo demás es tuyo: componentes, estilos, estructura de carpetas, decisiones de UX.
+* **Proceso Inicial:** Antes de escribir código, tracé wireframes rápidos en una libreta para definir la estructura y jerarquía, evitando iteraciones costosas en el código.
+* **Paleta de Colores:** Opté por una paleta sobria de tonos neutros con un único color de acento (`#CDF258`). Dado que la interfaz ya incorpora múltiples elementos visuales (score, banderas, etc.), limitar los colores previene la saturación visual.
+* **Conviction Score:** Se presenta de forma destacada y con color al ser el principal indicador de decisión. Agregué un ícono informativo (`i`) para dar contexto, ya que es un concepto propio del producto.
+* **Modal de Detalles:** Decidí no repetir la información de la Card. El modal se enfoca en datos profundos (como las *signals*) e incluye un botón de "Guardar" como placeholder para futuras funcionalidades. A futuro, este modal podría evolucionar a un "showroom" completo de la startup, pero para el alcance actual, esta vista es precisa y suficiente.
 
-> **Sobre el scope.** Preferimos un `StartupCard` y una jerarquía de lista con criterio impecable que una lista larga de features a medias. Si tienes que elegir, pule lo base antes de tocar los opcionales. El criterio de qué dejar fuera también es parte de lo que evaluamos.
+## 2. Desarrollo y Arquitectura
 
-### 2.1. Requerido (base)
+Este reto fue una excelente oportunidad para consolidar mis habilidades con **TypeScript**, integrándolo de forma estricta con React.
 
-Tu entrega debe cumplir al menos con esto:
+* **Flujo de Trabajo:** Prioricé la construcción del ecosistema de la Card (`StartupCard`, `ModalCard`, Skeletons y animaciones de entrada). Suelo enfocarme en cerrar una feature completa a la vez para asegurar su calidad.
+* **Lógica de Filtros y Estado:** Implementar los filtros fue el mayor reto lógico. Comencé con un estado local, pero **refactoricé hacia un custom hook** (`useStartupFilters`) para mejorar la escalabilidad y limpieza del código. 
+* **Deep Linking:** Integré los filtros con los *query params* de la URL. Esto permite que el estado de la búsqueda pueda compartirse fácilmente a través de un enlace, aportando gran valor a la UX.
+* **Detalles Finales:** Los *empty states* y estados de selección los abordé al final, con el flujo principal ya estable. Además, incluí un **Modo Oscuro** nativo con Tailwind, ya que es un estándar en mis entregas.
 
-1. **Renderizar** la lista de startups consumida desde `fetchStartups()` vía **React Query**.
-2. **Loading state** mientras carga — usa un **skeleton** de la card, no un spinner genérico. Los analistas lo ven 30+ veces al día; cuenta.
-3. **Componente `StartupCard`** que muestre al menos:
-   - Nombre
-   - Stage
-   - Tags de sector
-   - **Conviction score** como un indicador visual (barra, anillo, heatbar, dot pattern — tú eliges; en tus decisiones de diseño justifica la elección)
-   - Trend indicator (up / down / neutral)
-   - País
-4. **Filtros funcionales** por:
-   - Stage (multi-select)
-   - Sector (multi-select)
-   - País (multi-select)
-5. **Ordenamiento** por:
-   - Conviction score
-   - Funding amount
-   - Founded year
+## 3. Inconsistencias y Observaciones del Scaffold Base
 
-### 2.2. Opcional (diferenciadores)
+Durante el desarrollo, noté ciertas rarezas en el código base. Decidí manejarlas a nivel de UI para proteger la aplicación:
 
-No tienes que hacer todos. Son oportunidades para mostrar profundidad donde te importe:
+* **Inconsistencias de Datos:** `fundingAmount` no siempre está presente (aunque se usa para ordenar), y hay valores fuera de rango en `signals.weight` y `foundedYear`. Como `signals` no garantiza contenido, implementé un *Empty State* ("Modo Stealth") en el modal.
+* **Formato de Moneda:** Al no haber garantías sobre la normalización de la moneda en el mock, creé una función `formatCurrency` asumiendo que los valores base están en MXN.
+* **Arquitectura del Mock:** El archivo `api/mock.ts` mezcla datos, lógica de fetch y simulación de latencia. En un entorno real, separaría esto en capas (`api/client.ts`, `api/startups.ts`, `/mocks`). Similarmente, `types/index.ts` centraliza todo, lo cual escalaría mejor separado por dominios.
+* **Manejo de Errores:** Noté que existe una interfaz `ApiError` pero no se utiliza en `fetchStartups`, limitando el realismo en la simulación de fallos.
 
-- Animación de entrada de las cards al cargar o al cambiar filtros
-- Expandir una card para ver los `ConvictionSignals` como breakdown visual (por tipo: team / market / traction / product)
-- Búsqueda en tiempo real por nombre (con debounce)
-- Persistir filtros y búsqueda en la URL vía query params
-- Al menos **1 test unitario** del componente que consideres más crítico
-- Empty state bien diseñado cuando los filtros no devuelven resultados
-- Responsive decente (no hace falta mobile-first, pero que no se rompa en 1024px)
+## 4. Qué Haría Diferente con Más Tiempo
 
----
+La honestidad técnica es fundamental para mí. Con más tiempo, implementaría:
 
-## 3. Stack
+1. **Virtualización del Grid:** Actualmente `StartupGrid` renderiza todo el DOM. Si los registros crecen a miles, usaría `@tanstack/react-virtual` para renderizar solo lo visible.
+2. **Paginación / Infinite Scroll:** Estructuraría mejor los llamados a la API para soportar un *fetching* incremental, evitando cargas masivas.
+3. **Mobile First & Responsive:** Dedicaría mayor prioridad a micro-optimizar la experiencia móvil, clave desde la perspectiva de accesibilidad.
+4. **Testing:** Aunque tengo bases en testing, dedicaría un esfuerzo específico a cubrir la lógica crítica (como el hook de filtros) mediante pruebas unitarias robustas.
 
-- **React 18 + TypeScript** — obligatorio
-- **Vite** — obligatorio
-- **React Query** (`@tanstack/react-query`) — obligatorio para server state
-- **Zustand** — úsalo si necesitas estado global (filtros, UI state); es opcional
-- **CSS Modules o Tailwind** — tú eliges; sé consistente
-- **Vitest + Testing Library** — para el test opcional
-- **Sin librerías de UI externas** (MUI, Chakra, Radix, shadcn, Ant, etc.). Todo custom.
-  - Excepción: sí puedes usar `lucide-react` u otro set de íconos. Justifícalo.
+## 5. Colaboración con IA
 
----
+Utilicé IA como un copiloto para acelerar ciertas tareas, manteniendo yo el control de la arquitectura:
 
-## 4. Cómo correr el proyecto
-
-```bash
-pnpm install
-pnpm run dev
-```
-
-Otros scripts:
-
-```bash
-pnpm run build    # build de producción
-pnpm run test     # Vitest en modo watch
-pnpm run lint     # ESLint
-```
-
----
-
-## 5. Criterios de evaluación
-
-Esto es lo que miramos. En orden de peso aproximado:
-
-### Diseño visual & sensibilidad de UX (30%)
-No buscamos que sea *perfecto* — buscamos que sea *intencional*. Minimalista o elaborado, ambos son válidos siempre que haya coherencia: tipografía, espaciado, jerarquía, color. ¿Cómo se siente al usarlo? ¿Un analista podría escanear 30 cards rápido sin fatiga?
-
-### Arquitectura React/TypeScript (30%)
-Composición de componentes, separación de responsabilidades, dónde vive cada pieza de lógica. ¿La `StartupCard` es pura o está acoplada al store? ¿Hay hooks que extraen lógica reutilizable? ¿El código escalaría si mañana añadimos 10 filtros más?
-
-### Manejo de estado y data fetching (20%)
-Uso correcto de React Query (query keys, stale time, loading/error states). Separación entre server state y UI state. Si usas Zustand, que tenga sentido y no duplique lo que React Query ya hace.
-
-### Código limpio y tipado (20%)
-Tipos precisos (sin `any` injustificados ni `as` para silenciar errores). Nombres claros. Sin código muerto ni archivos de andamio sin uso. Consistencia en el estilo.
-
-### Lo que NO evaluamos
-- **Pixel-perfect** con ningún diseño. No hay Figma, es intencional — queremos ver tu criterio.
-- **Cantidad** de opcionales completados. Mejor 2 bien que 6 a medias.
-- **Animaciones complejas.** Si las haces, que tengan propósito.
-- **Cobertura de tests.** El test opcional es para ver *cómo* testeas, no cuánto.
-
----
-
-## 6. Entrega
-
-1. Súbelo a un repo público en tu GitHub.
-2. Asegúrate de que corre con `pnpm install && pnpm run dev` sin errores.
-3. Actualiza este README (o crea un `NOTES.md`) con:
-   - **Decisiones de diseño** que tomaste (mínimo un párrafo). Queremos leer *por qué* elegiste X sobre Y, no *qué* hiciste.
-   - **Qué decidí NO construir y por qué.** El scope es un ejercicio de criterio tanto como la implementación. Un senior tiene opiniones sobre lo que sobra.
-   - **Inconsistencias o rarezas** que notaste en los datos o en el scaffold, aunque no las hayas "arreglado". Lo que ves y decides no tocar cuenta tanto como lo que construyes.
-   - **Qué harías diferente con más tiempo.** Honestidad > perfección.
-   - **Cómo colaboraste con IA**, si aplica. No penalizamos el uso — todos la usamos. Sí valoramos que nos cuentes en qué decisiones la voz final fue tuya y en cuáles cediste. La honestidad aquí pesa más que la pureza.
-   - (Opcional) Screenshot o GIF corto del resultado.
-4. Manda un email con el link al repo.
-
-Si tienes una duda de scope, asume lo razonable y documéntalo. No te bloquees esperando respuesta.
-
----
-
-## 7. Estructura inicial del repo
-
-```
-xylence-frontend-challenge/
-├── README.md
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-├── index.html
-└── src/
-    ├── main.tsx              # entry + QueryClientProvider
-    ├── App.tsx               # shell vacío — empieza aquí
-    ├── index.css             # reset base mínimo
-    ├── api/
-    │   └── mock.ts           # fetchStartups() con delay simulado
-    ├── types/
-    │   └── index.ts          # Startup, ConvictionSignal, etc.
-    └── assets/
-        └── logo.png
-```
-
-Todo lo demás (componentes, hooks, styles, store, tests) lo organizas como veas. Nos interesa tu criterio.
-
----
-
-Buena suerte. Estamos emocionados de ver qué construyes.
+* **Tipado Estricto:** Fue de gran ayuda para validar y complementar la sintaxis en TypeScript, particularmente en los retos de tipado al leer de la URL en el `useStartupFilters`.
+* **Boilerplate & CSS:** La usé como punto de partida para los *Skeletons* y para destrabar algunos problemas de renderizado con el dropdown de ordenación. Posteriormente, limpié y refiné ese código generado a mano.
+* **Testing (Descartado):** Hice intentos de generar tests con IA, pero decidí no incluirlos. Prefiero no entregar código (ni siquiera tests) del que no estoy 100% convencido. Opté por dejarlo fuera del scope antes que asumir que la IA garantizaba su calidad.

@@ -4,6 +4,7 @@ import { CircleFlag } from 'react-circle-flags';
 import { SignalCard } from './SignalModalCard';
 import { EmptyState } from '@/components/Shared/EmptyState';
 import { Startup } from '@/types';
+import { ActionButton } from '@/components/Shared/ActionButton';
 
 export default function BodyModalCard({ details }: { details: Startup }) {
 
@@ -62,12 +63,8 @@ export default function BodyModalCard({ details }: { details: Startup }) {
             )}
 
             <div className="flex justify-center gap-4 pt-6 border-t border-cardBorder">
-                <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-hoverBg text-xs font-black uppercase hover:bg-textMain hover:text-cardBg transition-all">
-                    <Share2 size={16} /> Compartir
-                </button>
-                <button className="flex items-center gap-2 px-6 py-3 rounded-full bg-hoverBg text-xs font-black uppercase hover:bg-textMain hover:text-cardBg transition-all">
-                    <Bookmark size={16} /> Guardar
-                </button>
+                <ActionButton icon={Share2} label="Compartir" onClick={() => console.log('Compartir')} />
+                <ActionButton icon={Bookmark} label="Guardar" onClick={() => console.log('Guardar')} />
             </div>
         </>
   )

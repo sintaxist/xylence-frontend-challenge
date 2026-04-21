@@ -1,7 +1,6 @@
-import { Info } from "lucide-react";
-
 import { ConvictionSignal } from "@/types";
 import { normalizeScore, SIGNAL_BAR_COLOR } from "@/utils/visuals";
+import { LabelWithTooltip } from "@/components/Shared/LabelWithTooltip";
 
 export function SignalCard({ signal }: { signal: ConvictionSignal }) {
   const score = normalizeScore(signal.weight);
@@ -24,17 +23,13 @@ export function SignalCard({ signal }: { signal: ConvictionSignal }) {
     <div className="flex flex-col border border-cardBorder rounded-2xl p-5">
       <div className="flex justify-between items-start mb-3">
         <div className="flex flex-col">
-          <div className="flex items-center gap-2 mb-1 group/info relative">
-            <span className="text-xs text-textSecondary uppercase">
-              {categoryNames[signal.type] || signal.type}
-            </span>
-            <Info className="w-4 h-4 text-textSecondary cursor-help opacity-70 hover:opacity-100" />
-            
-            <div className="absolute bottom-full left-0 mb-3 w-72 p-4 bg-textMain text-cardBg text-xs font-medium leading-relaxed rounded-xl opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-all z-50 shadow-2xl border border-white/10">
-              {tooltips[signal.type] || "Métrica de análisis algorítmico avanzada."}
-              <div className="absolute top-full left-3 border-5 border-transparent border-t-textMain" />
-            </div>
-          </div>
+          <LabelWithTooltip 
+            label={categoryNames[signal.type] || signal.type}
+            tooltipText={tooltips[signal.type] || "Métrica de análisis algorítmico avanzada."}
+            tooltipWidth="w-72"
+            iconSize={16}
+            className="mb-1"
+          />
           <span className="text-2xl font-black text-textMain leading-none tracking-tighter">
             {score}
           </span>

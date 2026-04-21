@@ -5,7 +5,7 @@ import {
   SEGMENTS_SCORE_BAR,
   trendConfigIcons,
 } from "@/utils/visuals";
-import { Info } from "lucide-react";
+import { LabelWithTooltip } from "@/components/Shared/LabelWithTooltip";
 
 export default function FooterStartupCard({ startup }: { startup: Startup }) {
     const { trend, convictionScore } = startup;
@@ -17,16 +17,12 @@ export default function FooterStartupCard({ startup }: { startup: Startup }) {
             <div className="border-t border-cardBorder mb-1 opacity-50"></div>
 
             <div>
-                <div className="flex items-center gap-2 mb-1.5 relative group/tooltip">
-                    <p className="text-xs text-textSecondary uppercase tracking-wider">
-                        Score Predictivo
-                    </p>
-                    <Info className="w-3 h-3 text-textSecondary cursor-help opacity-70" />
-                    <div className="absolute bottom-full left-0 w-48 sm:w-56 p-3 bg-textMain text-cardBg text-xs font-medium rounded-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all z-30 shadow-2xl pointer-events-none border border-white/10">
-                        Indicador del 0 al 100 generado por nuestra IA, que evalúa señales de mercado.
-                        <div className="absolute top-full left-4 border-4 border-transparent border-t-textMain" />
-                    </div>
-                </div>
+                <LabelWithTooltip 
+                    label="Score Predictivo"
+                    tooltipText="Indicador del 0 al 100 generado por nuestra IA, que evalúa señales de mercado."
+                    tooltipWidth="w-48 sm:w-56"
+                    className="mb-1.5"
+                />
 
                 <div className="flex items-center">
                     <span className="text-3xl sm:text-4xl font-black text-textMain leading-none">

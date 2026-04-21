@@ -4,7 +4,7 @@ export default function HeaderStartupCard({ stage }: { stage: string }) {
   return (
     <div className="flex items-end justify-between gap-4">
       <div className="flex-grow h-full bg-cardBg border border-cardBorder border-b-0 rounded-t-3xl flex items-center px-5 sm:px-6 relative top-[1px] z-10">
-        <span className="text-xs sm:text-xs font-black uppercase text-textSecondary truncate">
+        <span className="text-xs sm:text-xs font-black uppercase text-textSecondary">
           {stage}
         </span>
         <div className="absolute bottom-0 -right-6 w-6 h-6 overflow-hidden pointer-events-none">
